@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'dev.jgregorio.handle'
+group = 'dev.jgregorio.demo'
 version = '1.0-SNAPSHOT'
 sourceCompatibility = '18'
 
