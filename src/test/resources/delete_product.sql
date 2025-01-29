@@ -1,4 +1,5 @@
-DELETE p, pd
-FROM products p
-INNER JOIN product_details pd ON p.id = pd.product_id
-WHERE p.name = 'Sample Product';
+DELETE
+FROM products p;
+
+DELETE
+FROM product_details pd;
