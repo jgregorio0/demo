@@ -1,15 +1,13 @@
 package demo;
 
-import lombok.Data;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 
-
-@Data
-public class ProductInputDto {
-    private String name;
-
-    private BigDecimal price;
-
-    private String description;
+@Builder
+public record ProductUpdateDto(
+        Long id,
+        String name,
+        BigDecimal price,
+        String description) {
 }
