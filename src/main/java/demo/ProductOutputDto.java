@@ -1,13 +1,15 @@
 package demo;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-@Data
-public class ProductOutputDto {
-    private Long id;
-    private String name;
-    private BigDecimal price;
-    private String description;
+public record ProductOutputDto(
+        Long id,
+        String name,
+        BigDecimal price,
+        String description,
+        String createdBy,
+        LocalDateTime createdDate,
+        String lastModifiedBy,
+        LocalDateTime lastModifiedDate) {
 }

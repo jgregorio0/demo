@@ -2,26 +2,25 @@ package demo;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    @Mapping(target = "id", source = "product.id")
-    @Mapping(target = "name", source = "product.name")
-    @Mapping(target = "price", source = "product.price")
-    @Mapping(target = "description", source = "product.description")
-    ProductOutputDto toDto(ProductEntity product);
+    ProductOutputDto mapEntitytoDto(ProductEntity entity);
 
-    @Mapping(target = "id", source = "product.id")
-    @Mapping(target = "name", source = "product.name")
-    @Mapping(target = "price", source = "product.price")
-    @Mapping(target = "description", source = "product.description")
-    @Mapping(target = "productDetails", source = "product.productDetails")
-    ProductWithDetailsDto withDetailsDto(ProductEntity product);
-
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "name", source = "inputDto.name")
-    @Mapping(target = "price", source = "inputDto.price")
-    @Mapping(target = "description", source = "inputDto.description")
-    ProductEntity toEntity(ProductInputDto inputDto);
+    ProductEntity mapToEntity(ProductInputDto input);
+
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    void mapToEntity(@MappingTarget ProductEntity entity, ProductInputDto input);
+
 }

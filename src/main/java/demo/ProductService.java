@@ -1,43 +1,43 @@
 package demo;
 
-import com.example.product.entity.Product;
-import com.example.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository repository;
+    private final ProductMapper mapper;
 
     @Transactional
-    public Product create(Product product) {
-        return repository.save(product);
+    public ProductOutputDto create(ProductInputDto input) {
+        return mapper.mapEntitytoDto(
+                repository.save(
+                        mapper.mapToEntity(input)));
     }
 
-    public Product findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-    }
-
-    public List<Product> findAll() {
-        return repository.findAll();
-    }
-
-    @Transactional
-    public Product update(Product product, Long id) {
-        Product existingProduct = findById(id);
-        existingProduct.setName(product.getName());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setDescription(product.getDescription());
-        return repository.save(existingProduct);
+    public ProductOutputDto read(Long id) {
+        return mapper.mapEntitytoDto(
+                repository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
     @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+
+    @Transactional
+    public ProductOutputDto update(ProductInputDto input, Long id) {
+        return repository.findById(id)
+                .map((e) -> {
+                    mapper.mapToEntity(e, input);
+                    return e;
+                })
+                .map(repository::save)
+                .map(mapper::mapEntitytoDto)
+                .orElseThrow(() -> new RuntimeException("Could not uptade product"));
     }
 }
