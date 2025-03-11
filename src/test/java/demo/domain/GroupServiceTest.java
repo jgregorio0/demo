@@ -87,11 +87,11 @@ class GroupServiceTest {
         assertThat(read.id()).isEqualTo(GROUP_ID);
         assertThat(read.client().id()).isEqualTo(CLIENT_ID);
         assertThat(read.orders().stream().map(Order::id).toList())
-                .containsAll(ORDER_IDS);
+            .containsAll(ORDER_IDS);
         assertThat(read.orders().stream()
-                .flatMap(o -> o.students().stream())
-                .map(Student::id)
-                .toList())
-                .containsAll(STUDENT_IDS);
+                       .flatMap(o -> o.students().stream())
+                       .map(Student::id)
+                       .toList())
+            .containsAll(STUDENT_IDS);
     }
 }
