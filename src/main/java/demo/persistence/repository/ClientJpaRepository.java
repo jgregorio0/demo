@@ -1,9 +1,10 @@
 package demo.persistence.repository;
 
-import demo.persistence.model.OrderGroupEntity;
+import demo.persistence.model.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderGroupJpaRepository extends JpaRepository<OrderGroupEntity, Long> {
+public interface OrderJpaRepository extends JpaRepository<OrderEntity, Long> {
+
 }

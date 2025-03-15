@@ -1,24 +1,20 @@
 package demo.persistence.repository;
 
-import demo.persistence.model.OrderEntity;
+import demo.persistence.model.GroupEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Repository
-public interface OrderJpaRepository extends JpaRepository<OrderEntity, Long> {
+public interface GroupJpaRepository extends JpaRepository<GroupEntity, Long> {
 
     @Query("""
-            SELECT o
-            FROM OrderEntity o
-                LEFT JOIN FETCH o.client c
-                LEFT JOIN FETCH o.orderStudents os
-                LEFT JOIN FETCH os.student s
-            WHERE o.id IN :ids
+            SELECT g
+            FROM GroupEntity g
+                LEFT JOIN FETCH g.orders o
+            WHERE g.id = :id
             """)
-    List<OrderEntity> findWithStudentsByIds(Set<Long> ids);
-
+    Optional<GroupEntity> findWithOrdersById(Long id);
 }
