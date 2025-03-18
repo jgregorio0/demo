@@ -1,17 +1,15 @@
 package demo.persistence.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
 @Table(name = "groups")
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,14 +19,10 @@ public class GroupEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String number;
+    private Integer number;
 
     @Builder.Default
-    @OneToMany(mappedBy = "group")
-    private List<OrderGroupEntity> orderGroups = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private ClientEntity client;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderEntity> orders = new ArrayList<>();
 
 }

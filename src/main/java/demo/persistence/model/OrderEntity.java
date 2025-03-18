@@ -22,11 +22,7 @@ public class OrderEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private ClientEntity client;
-
-    @OneToMany(mappedBy = "order")
-    List<OrderStudentEntity> orderStudents;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "second_id")
+    ClientEntity client;
 }
