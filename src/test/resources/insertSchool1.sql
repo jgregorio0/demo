@@ -1,0 +1,1 @@
+insert into schools (id, name) values (1, 'School 1');

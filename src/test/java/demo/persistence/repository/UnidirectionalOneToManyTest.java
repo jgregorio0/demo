@@ -11,13 +11,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 
 @SpringBootTest
 class UnidirectionalOneToManyTest {
@@ -40,6 +39,7 @@ class UnidirectionalOneToManyTest {
         /*
         insert into departments (id, name) values (default, ?)
         binding parameter [1] as [VARCHAR] - [Department 1]
+
         update employees set department_id=? where id=?
         binding parameter [1] as [BIGINT] - [1]
         binding parameter [2] as [BIGINT] - [10]
@@ -226,6 +226,10 @@ class UnidirectionalOneToManyTest {
         // THEN
         assertThat(saved).isNotNull();
         assertThat(saved.getEmployees().size()).isEqualTo(1);
+        Set<Long> savedEmployeeIds = saved.getEmployees().stream()
+                .map(Employee::getId)
+                .collect(Collectors.toSet());
+        assertThat(savedEmployeeIds).contains(employee1.getId());
         /*
         select department0_.id as id1_0_0_, department0_.name as name2_0_0_ from departments department0_ where department0_.id=?
         binding parameter [1] as [BIGINT] - [2]
