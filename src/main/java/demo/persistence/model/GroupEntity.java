@@ -22,7 +22,7 @@ public class GroupEntity {
     private Integer number;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderEntity> orders = new ArrayList<>();
+    @OneToMany
+    private List<GroupOrderEntity> groupOrders = new ArrayList<>();
 
 }
