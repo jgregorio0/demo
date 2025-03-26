@@ -5,22 +5,16 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "clients")
-@Getter
-@Setter
+@Table(name = "employees")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class ClientEntity {
-
+public class Employee {
+ 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "second_id")
-    private Long secondId;
 
 }

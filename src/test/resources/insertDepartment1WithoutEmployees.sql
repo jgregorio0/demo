@@ -1,0 +1,1 @@
+insert into departments (id, name) values (1, 'Department 1');

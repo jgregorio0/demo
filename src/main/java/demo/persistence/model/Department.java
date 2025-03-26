@@ -7,22 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "groups")
-@Getter
-@Setter
+@Table(name = "departments")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupEntity {
+@Getter
+@Setter
+public class Department {
+ 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Integer number;
-
+    private String name;
+ 
+    @OneToMany
+    @JoinColumn(name = "department_id")
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderEntity> orders = new ArrayList<>();
-
+    private List<Employee> employees = new ArrayList<>();
 }
