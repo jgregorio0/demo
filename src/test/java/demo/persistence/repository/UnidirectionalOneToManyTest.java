@@ -24,6 +24,9 @@ class UnidirectionalOneToManyTest {
     @Autowired
     private DepartmentJpaRepository departmentJpaRepository;
 
+    @Autowired
+    private EmployeeJpaRepository employeeJpaRepository;
+
     @Test
     @Transactional
     void givenDepartmentWithNonExistingEmployee_whenCreateDepartment_thenThrowsException() {
@@ -52,9 +55,7 @@ class UnidirectionalOneToManyTest {
     @Sql("/insertEmployee1.sql")
     @Transactional
     void givenDepartmentWithExistingEmployee_whenCreateDepartment_thenCreatedIsNotNull() {
-        Employee existingEmployee = Employee.builder()
-                .id(1L)
-                .build();
+        Employee existingEmployee = employeeJpaRepository.getReferenceById(1L);
         Department department = Department.builder()
                 .name("Department 1")
                 .employees(List.of(existingEmployee))
@@ -67,14 +68,10 @@ class UnidirectionalOneToManyTest {
     @Sql("/insertEmployee1.sql")
     @Sql("/insertDepartment1WithoutEmployees.sql")
     @Transactional
-    void givenDepartmentWithoutEmployee_whenAddEmployeeAndUpdateDepartment_thenEmployeesSizeIs1() {
+    void givenDepartmentWithoutEmployees_whenAdding1Employee_thenEmployeesSizeIs1() {
         // GIVEN
-        Employee existingEmployee = Employee.builder()
-                .id(1L)
-                .build();
-        Department departmentWithoutEmployees = Department.builder()
-                .id(1L)
-                .build();
+        Employee existingEmployee = employeeJpaRepository.getReferenceById(1L);
+        Department departmentWithoutEmployees = departmentJpaRepository.getReferenceById(1L);
         // WHEN
         departmentWithoutEmployees.getEmployees().clear();
         departmentWithoutEmployees.getEmployees().add(existingEmployee);
