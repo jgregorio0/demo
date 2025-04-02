@@ -62,6 +62,14 @@ class UnidirectionalOneToManyTest {
                 .build();
         Department created = departmentJpaRepository.saveAndFlush(department);
         assertThat(created).isNotNull();
+        /*
+        insert into departments (id, name) values (default, ?)
+        binding parameter [1] as [VARCHAR] - [Department 1]
+        
+        update employees set department_id=? where id=?
+        binding parameter [1] as [BIGINT] - [1]
+        binding parameter [2] as [BIGINT] - [1]
+         */
     }
 
     @Test

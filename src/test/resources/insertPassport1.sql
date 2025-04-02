@@ -1,0 +1,1 @@
+insert into passports (id, number) values (1, 'XP8271602');
