@@ -1,0 +1,1 @@
+insert into books (id, title) values (1, 'No God no owner');
