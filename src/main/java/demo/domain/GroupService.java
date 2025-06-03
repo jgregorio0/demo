@@ -40,49 +40,49 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public Group readWithOrdersAndStudents(Long id) {
-        final Group group = groupRepository.readWithOrders(id);
-        addStudentsToGroupOrders(group);
-        return group;
+        return addStudentsToOrders(
+                groupRepository.readWithOrders(id));
     }
 
     @Transactional(readOnly = true)
     public Group readWithOrdersAndDiplomaStudents(final Long id) {
-        final Group group = groupRepository.readWithOrders(id);
-        addDiplomaStudentsToGroupOrders(group);
-        return group;
+        return addDiplomaStudentsToOrders(
+                groupRepository.readWithOrders(id));
     }
 
     @Transactional(readOnly = true)
     public Group readWithOrdersAndElearningStudents(final Long id) {
-        final Group group = groupRepository.readWithOrders(id);
-        addElearningStudentsToGroupOrders(group);
-        return group;
+        return addElearningStudentsToOrders(
+                groupRepository.readWithOrders(id));
     }
 
-    private void addDiplomaStudentsToGroupOrders(final Group group) {
+    private Group addDiplomaStudentsToOrders(final Group group) {
         // add diploma students to group orders
         Set<Long> orderIds = group.getOrders().stream()
                                   .map(Order::getId)
                                   .collect(Collectors.toSet());
         final Map<Long, List<DiplomaStudent>> orderStudents = studentRepository.readOrderIdWithDiplomaStudentsByOrderIds(orderIds);
         group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
+        return group;
     }
 
-    private void addElearningStudentsToGroupOrders(final Group group) {
+    private Group addElearningStudentsToOrders(final Group group) {
         // add diploma students to group orders
         Set<Long> orderIds = group.getOrders().stream()
                                   .map(Order::getId)
                                   .collect(Collectors.toSet());
         final Map<Long, List<ElearningStudent>> orderStudents = studentRepository.readOrderIdWithElearningStudentsByOrderIds(orderIds);
         group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
+        return group;
     }
 
-    private void addStudentsToGroupOrders(final Group group) {
+    private Group addStudentsToOrders(final Group group) {
         final Set<Long> orderIds = group.getOrders().stream()
                                         .map(Order::getId)
                                         .collect(Collectors.toSet());
         final Map<Long, List<Student>> orderStudents = studentRepository.readOrderIdWithStudentsByOrderIds(orderIds);
         group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
+        return group;
     }
 
     @Transactional
