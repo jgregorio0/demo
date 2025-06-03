@@ -16,8 +16,14 @@ public interface GroupMapper {
     @Mapping(target = "id")
     @Mapping(target = "number")
     @Mapping(target = "client")
+    Group mapGroupEntityToGroup(GroupEntity entity);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id")
+    @Mapping(target = "number")
+    @Mapping(target = "client")
     @Mapping(target = "orders", source = "orderGroups")
-    Group toDto(GroupEntity entity);
+    Group mapGroupEntityToGroupWithOrders(GroupEntity entity);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "number")

@@ -23,7 +23,7 @@ public class StudentEntity {
     @Column(nullable = false)
     private String nif;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "student")
-    private List<OrderStudentEntity> orderStudents;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "student")
+//    private List<OrderStudentEntity> orderStudents;
 }

@@ -8,11 +8,13 @@ import java.util.Optional;
 
 public interface GroupRepository {
 
-    Group readWithOrdersAndStudents(Long id) throws DomainException;
+    Group read(Long id) throws DomainException;
 
     Group create(GroupRequest groupRequest);
 
     void delete(Long id);
 
     Group update(Long id, GroupRequest input);
+
+    Group readWithOrders(Long id);
 }

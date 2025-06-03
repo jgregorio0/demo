@@ -1,26 +1,43 @@
 package demo.domain.model;
 
-import lombok.Builder;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Builder
-public record Group(
-        Long id,
-        String number,
-        Client client,
-        List<Order> orders) {
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Group { //TODO JG devolver Group sin dependencias
 
-        Group group = (Group) o;
-        return Objects.equals(id, group.id);
+  private Long id;
+
+  private String number;
+
+  private Client client;
+
+  @Builder.Default
+  private List<Order> orders = Collections.emptyList();
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    Group group = (Group) o;
+    return Objects.equals(id, group.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
 }

@@ -1,38 +1,39 @@
 package demo.api;
 
+import demo.domain.model.DiplomaStudent;
+import demo.domain.model.ElearningStudent;
 import demo.domain.model.Student;
-import demo.persistence.model.OrderStudentEntity;
+import demo.persistence.model.DiplomaStudentEntity;
+import demo.persistence.model.ElearningStudentEntity;
 import demo.persistence.model.StudentEntity;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
-import java.util.Objects;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id")
-    @Mapping(target = "name")
-    @Mapping(target = "surname")
-    @Mapping(target = "nif")
-    Student toDto(StudentEntity entity);
+  // initialize StudentMapper
+  StudentMapper INSTANCE = Mappers.getMapper(StudentMapper.class);
 
-    default Student mapOrderStudentToStudent(OrderStudentEntity orderStudentEntity) {
-        if (Objects.isNull(orderStudentEntity)) {
-            return null;
-        }
-        return toDto(orderStudentEntity.getStudent());
-    }
 
-    default List<Student> mapOrderStudentsToStudent(List<OrderStudentEntity> orderStudentEntities) {
-        if (Objects.isNull(orderStudentEntities)) {
-            return null;
-        }
-        return orderStudentEntities.stream()
-                .map(this::mapOrderStudentToStudent)
-                .toList();
-    }
+
+  Student mapStudentEntityToStudent(StudentEntity entity);
+
+  @BeanMapping(builder = @org.mapstruct.Builder(disableBuilder = true))
+  @Mapping(source = "student.id", target = "id")
+  @Mapping(source = "student.name", target = "name")
+  @Mapping(source = "student.surname", target = "surname")
+  @Mapping(source = "student.nif", target = "nif")
+  @Mapping(source = "elearning.integratedDate", target = "integratedDate")
+  ElearningStudent mapStudentEntityToElearningStudent(StudentEntity student, ElearningStudentEntity elearning);
+
+  @BeanMapping(builder = @org.mapstruct.Builder(disableBuilder = true))
+  @Mapping(source = "student.id", target = "id")
+  @Mapping(source = "student.name", target = "name")
+  @Mapping(source = "student.surname", target = "surname")
+  @Mapping(source = "student.nif", target = "nif")
+  @Mapping(source = "diploma.diplomaDate", target = "diplomaDate")
+  DiplomaStudent mapStudentEntityToDiplomaStudent(StudentEntity student, DiplomaStudentEntity diploma);
 }

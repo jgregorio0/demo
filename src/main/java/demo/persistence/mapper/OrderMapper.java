@@ -19,14 +19,13 @@ public interface OrderMapper {
     @Mapping(target = "id")
     @Mapping(target = "name")
     @Mapping(target = "billingClient", source = "client")
-    @Mapping(target = "students", source = "orderStudents")
-    Order toDto(OrderEntity entity);
+    Order mapOrderEntityToOrder(OrderEntity entity);
 
     default Order mapOrderGroupToOrder(OrderGroupEntity orderGroupEntity) {
         if (Objects.isNull(orderGroupEntity)) {
             return null;
         }
-        return toDto(orderGroupEntity.getOrder());
+        return mapOrderEntityToOrder(orderGroupEntity.getOrder());
     }
 
     default List<Order> mapOrderGroupsToOrders(List<OrderGroupEntity> orderGroupEntities) {
