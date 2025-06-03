@@ -1,20 +1,18 @@
-- Create product
+# Hot reload
+
+- build.gradle
 
 ```
-curl -X POST \
--H "Content-Type: application/json" \
--d '{
-"name": "Example Product",
-"price": 9.99,
-"description": "A sample product"
-}' \
-http://localhost:8080/api/products
+developmentOnly("org.springframework.boot:spring-boot-devtools")
 ```
 
-- Get product
+- application.properties
+```
+# Enable/disable restart functionality
+spring.devtools.restart.enabled=true
+# Enable/disable LiveReload server
+spring.devtools.livereload.enabled=true
+```
 
-```
-curl -X GET \
--H "Accept: application/json" \
-http://localhost:8080/api/products/1
-```
+- Enable option: File / Settings / Advanced Settings / Compiler / Allow auto-make to start... 
+- Create a new run configuration: Edit cofigurations / new / gradle / bootRun
