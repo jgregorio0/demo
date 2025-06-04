@@ -30,7 +30,7 @@ public class GroupController {
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = DEFAULT_PROJECTION) final String projection) {
         return switch (projection) {// TODO JG strategy pattern
-            case DEFAULT_PROJECTION -> ResponseEntity.ok(groupService.read(id));
+            case DEFAULT_PROJECTION -> ResponseEntity.ok(groupService.readWithOrdersAndStudents(id));
             case DIPLOMA_PROJECTION -> ResponseEntity.ok(groupService.readWithOrdersAndDiplomaStudents(id));
             case ELEARNING_PROJECTION -> ResponseEntity.ok(groupService.readWithOrdersAndElearningStudents(id));
             default -> throw new DomainException("UNSUPPORTED_PROJECTION");
