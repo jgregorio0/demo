@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,11 +20,6 @@ public class Group { //TODO JG devolver Group sin dependencias
   private Long id;
 
   private String number;
-
-  private Client client;
-
-  @Builder.Default
-  private List<Order> orders = Collections.emptyList();
 
   @Override
   public boolean equals(Object o) {

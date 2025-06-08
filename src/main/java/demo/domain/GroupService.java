@@ -1,109 +1,44 @@
 package demo.domain;
 
-import demo.domain.model.DiplomaStudent;
-import demo.domain.model.ElearningStudent;
+import demo.api.ApiGroupNumberRepository;
 import demo.domain.model.Group;
-import demo.domain.model.Order;
-import demo.domain.model.Student;
-import demo.domain.model.request.GroupRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class GroupService {
+    private final ApiGroupRepository groupRepository;
+    private final ApiGroupNumberRepository groupNumberRepository;
 
-    private final GroupRepository groupRepository;
-    private final StudentRepository studentRepository;
-
-    @Transactional
-    public Group create(GroupRequest groupRequest) {
-        return groupRepository.create(groupRequest);
+    public List<Group> getGroupsWithNumbers() {
+        List<Group> groups = groupRepository.getGroups();
+        return getGroupsWithNumber(groups);
     }
 
-    @Transactional(readOnly = true)
-    public Group read(Long id) {
-        return groupRepository.read(id);
+    private List<Group> getGroupsWithNumber(List<Group> groups) {
+        List<CompletableFuture<Group>> futures = groups.stream()
+                .map(group -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return group.toBuilder()
+                                .number(groupNumberRepository.getGroupNumber(group.getId()))
+                                .build();
+                    } catch (RestClientException e) {
+                        log.error("Failed to fetch group number for group {}: {}",
+                                group.getId(), e.getMessage());
+                        return group;
+                    }
+                }))
+                .toList();
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
-
-    @Transactional(readOnly = true)
-    public Group readWithOrders(Long id) {
-        return groupRepository.readWithOrders(id);
-    }
-
-    @Transactional(readOnly = true)
-    public Group readWithOrdersAndStudents(Long id) {
-        return addStudentsToOrders(
-                groupRepository.readWithOrders(id));
-    }
-
-    @Transactional(readOnly = true)
-    public Group readWithOrdersAndDiplomaStudents(final Long id) {
-        return addDiplomaStudentsToOrders(
-                groupRepository.readWithOrders(id));
-    }
-
-    @Transactional(readOnly = true)
-    public Group readWithOrdersAndElearningStudents(final Long id) {
-        return addElearningStudentsToOrders(
-                groupRepository.readWithOrders(id));
-    }
-
-    private Group addDiplomaStudentsToOrders(final Group group) {
-        // add diploma students to group orders
-        Set<Long> orderIds = group.getOrders().stream()
-                                  .map(Order::getId)
-                                  .collect(Collectors.toSet());
-        final Map<Long, List<DiplomaStudent>> orderStudents = studentRepository.readOrderIdWithDiplomaStudentsByOrderIds(orderIds);
-        group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
-        return group;
-    }
-
-    private Group addElearningStudentsToOrders(final Group group) {
-        // add diploma students to group orders
-        Set<Long> orderIds = group.getOrders().stream()
-                                  .map(Order::getId)
-                                  .collect(Collectors.toSet());
-        final Map<Long, List<ElearningStudent>> orderStudents = studentRepository.readOrderIdWithElearningStudentsByOrderIds(orderIds);
-        group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
-        return group;
-    }
-
-    private Group addStudentsToOrders(final Group group) {
-        final Set<Long> orderIds = group.getOrders().stream()
-                                        .map(Order::getId)
-                                        .collect(Collectors.toSet());
-        final Map<Long, List<Student>> orderStudents = studentRepository.readOrderIdWithStudentsByOrderIds(orderIds);
-        group.getOrders().forEach(o -> o.setStudents(orderStudents.get(o.getId())));
-        return group;
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        groupRepository.delete(id);
-    }
-
-    @Transactional
-    public Group update(Long id, GroupRequest input) {
-        validateUpdate(id, input);
-        return groupRepository.update(id, input);
-    }
-
-    private void validateUpdate(Long id, GroupRequest input) {
-        if (Objects.isNull(id)) {
-            throw new IllegalArgumentException("Group id must not be null");
-        }
-        if (Objects.isNull(input)) {
-            throw new IllegalArgumentException("Group request input must not be null");
-        }
-    }
-
-
 }
